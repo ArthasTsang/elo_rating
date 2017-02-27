@@ -2,6 +2,7 @@ package com.arthas.selenium.elorating;
 
 
 import java.util.Date;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,6 +15,8 @@ import java.util.Date;
  * @author wytsang
  */
 public class GameRecord {
+    
+    private final static Logger logger= Logger.getLogger(GameRecord.class.getName());
     
     private int season;
     private String opponent;

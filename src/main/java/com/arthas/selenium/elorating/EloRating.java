@@ -33,18 +33,20 @@ import org.openqa.selenium.chrome.ChromeDriver;
  */
 public class EloRating {
     
+    private final static Logger logger= Logger.getLogger(EloRating.class.getName());
+    
     public void download(){
         Properties config= new Properties();
         InputStream in= getClass().getClassLoader().getResourceAsStream("config/config.properties");
         if(in!=null){
-            System.out.println("Loading conbfig file");
+            logger.log(Level.FINE, "Loading config file");
             try {
                 config.load(in);
             } catch (IOException ex) {
                 Logger.getLogger(EloRating.class.getName()).log(Level.SEVERE, null, ex);
             }
         }else{
-            System.out.println("File not found!");
+            logger.log(Level.FINE, "File not found!");
         }
         
         System.setProperty("webdriver.chrome.driver", config.getProperty("webdriver.chrome.driver"));
@@ -59,8 +61,8 @@ public class EloRating {
             String webAddress= baseAddress+t.getFile();
             driver.get(webAddress);
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); 
-    //        System.out.println(driver.getPageSource());
-    //        System.out.println("--------------------------------------------------");
+    //        logger.log(Level.FINE, driver.getPageSource());
+    //        logger.log(Level.FINE, "--------------------------------------------------");
 
             WebElement elm= driver.findElement(By.tagName("pre"));
             String jString= elm.getAttribute("innerHTML");
@@ -75,7 +77,7 @@ public class EloRating {
                 if(team.getStartYear()<startYear){
                     startYear= team.getStartYear();
                 }
-                System.out.println(team.toString());
+                logger.log(Level.FINE, team.toString());
             } catch (ParseException ex) {
                 Logger.getLogger(EloRating.class.getName()).log(Level.SEVERE, null, ex);
             }

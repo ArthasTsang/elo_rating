@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  */
 public class TeamRecordParser {
     
+    private final static Logger logger= Logger.getLogger(TeamRecordParser.class.getName());
     private final JSONObject content;
     private final SimpleDateFormat originFormat = new SimpleDateFormat("M/d/yyyy");
     private final SimpleDateFormat convertFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -51,7 +52,7 @@ public class TeamRecordParser {
     }
     
     private GameRecord parseGameRecord(JSONObject obj){
-//        System.out.println(obj);
+//        logger.log(Level.FINE, obj);
         GameRecord gmRecord= new GameRecord();
         try {
             gmRecord.setOpponent(((String)obj.get("t")).toUpperCase());
@@ -60,9 +61,9 @@ public class TeamRecordParser {
             gmRecord.setGameDate(convertFormat.format(d));
             gmRecord.setSeason(determineSeason(d));
             gmRecord.setElo(obj.get("y").toString());
-//            System.out.println(gmRecord.toString());
+//            logger.log(Level.FINE, gmRecord.toString());
         } catch (ParseException ex) {
-            Logger.getLogger(TeamRecordParser.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         
         return gmRecord;
