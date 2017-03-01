@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -32,21 +33,21 @@ import org.openqa.selenium.chrome.ChromeDriver;
  * @author wytsang
  */
 public class EloRating {
-    
-    private final static Logger logger= Logger.getLogger(EloRating.class.getName());
+
+    private static Logger logger= LogManager.getLogger(EloRating.class.getName());
     
     public void download(){
         Properties config= new Properties();
         InputStream in= getClass().getClassLoader().getResourceAsStream("config/config.properties");
         if(in!=null){
-            logger.log(Level.FINE, "Loading config file");
+            logger.log(Level.DEBUG, "Loading config file");
             try {
                 config.load(in);
             } catch (IOException ex) {
-                Logger.getLogger(EloRating.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, ex);
             }
         }else{
-            logger.log(Level.FINE, "File not found!");
+            logger.log(Level.ERROR, "File not found!");
         }
         
         System.setProperty("webdriver.chrome.driver", config.getProperty("webdriver.chrome.driver"));
@@ -58,6 +59,7 @@ public class EloRating {
         int startYear= Calendar.getInstance().get(Calendar.YEAR);
         int currentYear= Calendar.getInstance().get(Calendar.YEAR);
         for(Team t: Team.values()){
+            logger.log(Level.INFO, "Loading data for "+t.getLabel());
             String webAddress= baseAddress+t.getFile();
             driver.get(webAddress);
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS); 
@@ -77,15 +79,16 @@ public class EloRating {
                 if(team.getStartYear()<startYear){
                     startYear= team.getStartYear();
                 }
-                logger.log(Level.FINE, team.toString());
+                logger.log(Level.DEBUG, team.toString());
             } catch (ParseException ex) {
-                Logger.getLogger(EloRating.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.ERROR, ex);
             }
         }
         driver.quit();
         
         CSVWriter writer=null; 
         try {
+            logger.log(Level.INFO, "Export elo rating");
             writer = new CSVWriter(new FileWriter(config.getProperty("output.file")), ',');
             
             List<String> headerList= new ArrayList<String>();
@@ -109,14 +112,16 @@ public class EloRating {
                 }
                 writer.writeNext(eloList.toArray(new String[0]));
             }
+            
+            logger.log(Level.INFO, "Export completed");
         }catch (IOException ex) {
-            Logger.getLogger(EloRating.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.ERROR, ex);
         }finally{
             if(writer!=null){
                 try {
                     writer.close();
                 } catch (IOException ex) {
-                    Logger.getLogger(EloRating.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.ERROR, ex);
                 }
             }
         }

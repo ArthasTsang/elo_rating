@@ -1,7 +1,6 @@
 package com.arthas.selenium.elorating;
 
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Iterator;
 import org.json.simple.JSONArray;
@@ -9,8 +8,9 @@ import org.json.simple.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class TeamRecordParser {
     
-    private final static Logger logger= Logger.getLogger(TeamRecordParser.class.getName());
+    private static Logger logger= LogManager.getLogger(TeamRecordParser.class.getName());
     private final JSONObject content;
     private final SimpleDateFormat originFormat = new SimpleDateFormat("M/d/yyyy");
     private final SimpleDateFormat convertFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -63,7 +63,7 @@ public class TeamRecordParser {
             gmRecord.setElo(obj.get("y").toString());
 //            logger.log(Level.FINE, gmRecord.toString());
         } catch (ParseException ex) {
-            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.ERROR, ex);
         }
         
         return gmRecord;

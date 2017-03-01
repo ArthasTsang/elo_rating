@@ -3,7 +3,8 @@ package com.arthas.selenium.elorating;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class SeasonRecord {
     
-    private final static Logger logger= Logger.getLogger(SeasonRecord.class.getName());
+    private static Logger logger= LogManager.getLogger(SeasonRecord.class.getName());
     
     private int season;
     private ArrayList<GameRecord> games= new ArrayList<GameRecord>();
